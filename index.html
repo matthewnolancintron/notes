@@ -61,11 +61,36 @@
 
     function renderMarkdown(markdownText) {
       const md = new window.markdownit();
+
+      // Override the default renderer to handle links within the Markdown content
+      md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+        const href = tokens[idx].attrs[0][1];
+        const isMarkdownFile = href.endsWith('.md');
+        if (isMarkdownFile) {
+          tokens[idx].attrs[0][1] = '#';
+          tokens[idx].attrs.push(['data-md-link', href]);
+        }
+        return self.renderToken(tokens, idx, options, env, self);
+      };
+
       const html = md.render(markdownText);
       noteContent.innerHTML = html;
+
+      // Handle note links within the rendered Markdown
+      const noteLinks = noteContent.querySelectorAll('[data-md-link]');
+      noteLinks.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const markdownFile = link.getAttribute('data-md-link');
+          fetch(markdownFile)
+            .then(response => response.text())
+            .then(markdownText => renderMarkdown(markdownText))
+            .catch(error => console.error(error));
+        });
+      });
     }
 
-    // Handle note links
+    // Handle note links in the sidebar
     const noteLinks = document.querySelectorAll('.sidebar a');
     noteLinks.forEach(link => {
       link.addEventListener('click', e => {
