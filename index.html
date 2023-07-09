@@ -5,12 +5,18 @@
   <style>
     body {
       display: flex;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #f1f1f1;
     }
     ul {
       list-style-type: none;
       padding: 0;
-      width: 200px;
-      background-color: #f1f1f1;
+      margin: 0;
     }
     li {
       padding: 8px 16px;
@@ -22,6 +28,38 @@
     .content {
       flex: 1;
       padding: 16px;
+    }
+    .note-content {
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .note-content h1,
+    .note-content h2,
+    .note-content h3 {
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    .note-content p {
+      margin-bottom: 16px;
+    }
+    .note-content a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .note-content a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .content {
+        padding: 16px 24px;
+      }
     }
   </style>
 </head>
@@ -52,7 +90,7 @@
   </div>
 
   <div class="content">
-    <div id="note-content"></div>
+    <div class="note-content" id="note-content"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
@@ -90,7 +128,7 @@
       });
     }
 
-    // Handle note links in the sidebar
+    // Handle notelinks in the sidebar
     const noteLinks = document.querySelectorAll('.sidebar a');
     noteLinks.forEach(link => {
       link.addEventListener('click', e => {
