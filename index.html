@@ -35,7 +35,7 @@
     const noteContent = document.getElementById('note-content');
 
     function renderMarkdown(markdownText) {
-      const md = window.markdownit();
+      const md = new window.markdownit();
       const html = md.render(markdownText);
       noteContent.innerHTML = html;
     }
