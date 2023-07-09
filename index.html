@@ -118,8 +118,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
   <script>
     const noteContent = document.getElementById('note-content');
-    const graphContainer = document.getElementById('graph');
-
     function renderMarkdown(markdownText) {
       const md = new window.markdownit();
 
@@ -151,7 +149,7 @@
       });
     }
 
-    // Handle notelinks in the sidebar
+    // Handle note links in the sidebar
     const noteLinks = document.querySelectorAll('.sidebar a');
     noteLinks.forEach(link => {
       link.addEventListener('click', e => {
@@ -182,11 +180,14 @@
       };
       nodes.push(node);
 
-      const edge = {
-        from: link.href,
-        to: window.location.href,
-      };
-      edges.push(edge);
+      const linkedFiles = noteContent.querySelectorAll(`a[href="${link.href}"]`);
+      linkedFiles.forEach(file => {
+        const edge = {
+          from: link.href,
+          to: file.getAttribute('href'),
+        };
+        edges.push(edge);
+      });
     });
 
     const graphData = {
@@ -213,7 +214,8 @@
       },
     };
 
-    const network = new vis.Network(graphContainer, graphData, options);
+    const container = document.getElementById('graph');
+    const network = new vis.Network(container, graphData, options);
     network.on('click', event => {
       if (event.nodes.length > 0) {
         const clickedNode = nodes.find(node => node.id === event.nodes[0]);
