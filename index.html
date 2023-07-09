@@ -2,33 +2,59 @@
 <html>
 <head>
   <title>My Notes</title>
+  <style>
+    body {
+      display: flex;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      width: 200px;
+      background-color: #f1f1f1;
+    }
+    li {
+      padding: 8px 16px;
+      border-bottom: 1px solid #ccc;
+    }
+    li:hover {
+      background-color: #ddd;
+    }
+    .content {
+      flex: 1;
+      padding: 16px;
+    }
+  </style>
 </head>
 <body>
   <h1>My Notes</h1>
-  <ul>
-    <li><a href="./about-backgrounds.md">About Backgrounds</a></li>
-    <li><a href="./color-pages.md">Color Pages</a></li>
-    <li><a href="./creating-a-character.md">Creating a Character</a></li>
-    <li><a href="./creating-main-characters.md">Creating Main Characters</a></li>
-    <li><a href="./creating-secondary-character.md">Creating Secondary Character</a></li>
-    <li><a href="./creating-the-rival.md">Creating the Rival</a></li>
-    <li><a href="./drawing-advice.md">Drawing Advice</a></li>
-    <li><a href="./drawing-characters.md">Drawing Characters</a></li>
-    <li><a href="./events.md">Events</a></li>
-    <li><a href="./figure-sketches.md">Figure Sketches</a></li>
-    <li><a href="./how-to-create-counter-part.md">How to Create a Counterpart</a></li>
-    <li><a href="./perspective.md">Perspective</a></li>
-    <li><a href="./practice-drawing-expressions.md">Practice Drawing Expressions</a></li>
-    <li><a href="./research-character-appeal.md">Research Character Appeal</a></li>
-    <li><a href="./screentones.md">Screentones</a></li>
-    <li><a href="./size-and-density.md">Size and Density</a></li>
-    <li><a href="./story-flow-and-energy.md">Story Flow and Energy</a></li>
-    <li><a href="./the-cover.md">The Cover</a></li>
-    <li><a href="./the-plot.md">The Plot</a></li>
-    <li><a href="./whats-a-storyboard.md">What's a Storyboard</a></li>
-  </ul>
+  <div class="sidebar">
+    <ul>
+      <li><a href="./about-backgrounds.md">About Backgrounds</a></li>
+      <li><a href="./color-pages.md">Color Pages</a></li>
+      <li><a href="./creating-a-character.md">Creating a Character</a></li>
+      <li><a href="./creating-main-characters.md">Creating Main Characters</a></li>
+      <li><a href="./creating-secondary-character.md">Creating Secondary Character</a></li>
+      <li><a href="./creating-the-rival.md">Creating the Rival</a></li>
+      <li><a href="./drawing-advice.md">Drawing Advice</a></li>
+      <li><a href="./drawing-characters.md">Drawing Characters</a></li>
+      <li><a href="./events.md">Events</a></li>
+      <li><a href="./figure-sketches.md">Figure Sketches</a></li>
+      <li><a href="./how-to-create-counter-part.md">How to Create a Counterpart</a></li>
+      <li><a href="./perspective.md">Perspective</a></li>
+      <li><a href="./practice-drawing-expressions.md">Practice Drawing Expressions</a></li>
+      <li><a href="./research-character-appeal.md">Research Character Appeal</a></li>
+      <li><a href="./screentones.md">Screentones</a></li>
+      <li><a href="./size-and-density.md">Size and Density</a></li>
+      <li><a href="./story-flow-and-energy.md">Story Flow and Energy</a></li>
+      <li><a href="./the-cover.md">The Cover</a></li>
+      <li><a href="./the-plot.md">The Plot</a></li>
+      <li><a href="./whats-a-storyboard.md">What's a Storyboard</a></li>
+    </ul>
+  </div>
 
-  <div id="note-content"></div>
+  <div class="content">
+    <div id="note-content"></div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
   <script>
@@ -41,7 +67,7 @@
     }
 
     // Handle note links
-    const noteLinks = document.querySelectorAll('ul li a');
+    const noteLinks = document.querySelectorAll('.sidebar a');
     noteLinks.forEach(link => {
       link.addEventListener('click', e => {
         e.preventDefault();
