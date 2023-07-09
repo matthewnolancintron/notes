@@ -79,7 +79,6 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/vis-network@7.3.1/dist/vis-network.min.css" type="text/css" />
 </head>
 <body>
   <div class="sidebar">
@@ -116,7 +115,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
   <script>
     const noteContent = document.getElementById('note-content');
     const graphContainer = document.getElementById('graph');
@@ -152,7 +151,7 @@
       });
     }
 
-    // Handle note links in the sidebar
+    // Handle notelinks in the sidebar
     const noteLinks = document.querySelectorAll('.sidebar a');
     noteLinks.forEach(link => {
       link.addEventListener('click', e => {
@@ -172,85 +171,60 @@
     const edges = [];
 
     noteLinks.forEach(link => {
-// Generate knowledge graph based on links
-const nodes = [];
-const edges = [];
+      const node = {
+        id: link.href,
+        label: link.textContent,
+        shape: 'box',
+        font: {
+          size: 12,
+          color: '#000000',
+        },
+      };
+      nodes.push(node);
 
-noteLinks.forEach(link => {
-  const markdownFile = link.getAttribute('href');
-  const nodeId = markdownFile.replace('.md', '');
-  const nodeName = link.textContent;
+      const edge = {
+        from: link.href,
+        to: window.location.href,
+      };
+      edges.push(edge);
+    });
 
-  nodes.push({
-    id: nodeId,
-    label: nodeName,
-  });
+    const graphData = {
+      nodes: nodes,
+      edges: edges,
+    };
 
-  edges.push({
-    from: nodeId,
-    to: 'note-content',
-  });
-});
-
-const graphData = {
-  nodes: nodes,
-  edges: edges,
-};
-
-const options = {
-  nodes: {
-    shape: 'box',
-    size: 16,
-    color: '#FFFFFF',
-    font: {
-      color: '#000000',
-      size: 14,
-    },
-    borderWidth: 2,
-    shapeProperties: {
-      borderRadius: 5,
-    },
-  },
-  edges: {
-    color: {
-      color: '#000000',
-      hover: '#000000',
-      inherit: false,
-    },
-    arrows: {
-      to: {
-        enabled: true,
-        scaleFactor: 0.5,
+    const options = {
+      nodes: {
+        shape: 'box',
       },
-    },
-    smooth: {
-      type: 'continuous',
-    },
-  },
-  layout: {
-    hierarchical: {
-      enabled: true,
-      direction: 'UD',
-      sortMethod: 'directed',
-      levelSeparation: 150,
-      nodeSpacing: 150,
-    },
-  },
-  physics: {
-    enabled: false,
-  },
-};
+      edges: {
+        arrows: {
+          to: { enabled: true, scaleFactor: 0.5 },
+        },
+        color: { inherit: 'from' },
+      },
+      layout: {
+        hierarchical: {
+          enabled: true,
+          direction: 'UD',
+          sortMethod: 'directed',
+        },
+      },
+    };
 
-const container = document.getElementById('graph');
-const network = new vis.Network(container, graphData, options);
-network.on('click', event => {
-  if (event.nodes.length > 0) {
-    const clickedNode = nodes.find(node => node.id === event.nodes[0]);
-    if (clickedNode) {
-      fetch(clickedNode.id + '.md')
-        .then(response => response.text())
-        .then(markdownText => renderMarkdown(markdownText))
-        .catch(error => console.error(error));
-    }
-  }
-});
+    const network = new vis.Network(graphContainer, graphData, options);
+    network.on('click', event => {
+      if (event.nodes.length > 0) {
+        const clickedNode = nodes.find(node => node.id === event.nodes[0]);
+        if (clickedNode) {
+          fetch(clickedNode.id)
+            .then(response => response.text())
+            .then(markdownText => renderMarkdown(markdownText))
+            .catch(error => console.error(error));
+        }
+      }
+    });
+  </script>
+</body>
+</html>
