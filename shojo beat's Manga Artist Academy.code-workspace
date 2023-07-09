@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.editor.restoreViewState": "all",
+		"workbench.startupEditor": "none",
+		"extensions.autoUpdate": false
+	},
+	"extensions": {
+		"recommendations": [
+			"extension1.extension",
+			"extension2.extension"
+		]
+	}
+}
