@@ -172,89 +172,85 @@
     const edges = [];
 
     noteLinks.forEach(link => {
-      const node = {
-        id: link.href,
-        label: link.textContent,
-        shape: 'box',
-        font: {
-          size: 12,
-          color: '#000000',
-        },
-      };
-      nodes.push(node);
+// Generate knowledge graph based on links
+const nodes = [];
+const edges = [];
 
-      const linkedFiles = noteContent.querySelectorAll(`a[href="${link.href}"]`);
-      linkedFiles.forEach(file => {
-        const edge = {
-          from: link.href,
-          to: file.getAttribute('href'),
-        };
-        edges.push(edge);
-      });
-    });
+noteLinks.forEach(link => {
+  const markdownFile = link.getAttribute('href');
+  const nodeId = markdownFile.replace('.md', '');
+  const nodeName = link.textContent;
 
-    const graphData = {
-      nodes: nodes,
-      edges: edges,
-    };
+  nodes.push({
+    id: nodeId,
+    label: nodeName,
+  });
 
-    const options = {
-      nodes: {
-        shape: 'box',
-        size: 16,
-        color: '#FFFFFF',
-        font: {
-          color: '#000000',
-          size: 14,
-        },
-        borderWidth: 2,
-        shapeProperties: {
-          borderRadius: 5,
-        },
-      },
-      edges: {
-        color: {
-          color: '#000000',
-          hover: '#000000',
-          inherit: false,
-        },
-        arrows: {
-          to: {
-            enabled: true,
-            scaleFactor: 0.5,
-          },
-        },
-        smooth: {
-          type: 'continuous',
-        },
-      },
-      layout: {
-        hierarchical: {
-          enabled: true,
-          direction: 'UD',
-          sortMethod: 'directed',
-          levelSeparation: 150,
-          nodeSpacing: 150,
-        },
-      },
-      physics: {
-        enabled: false,
-      },
-    };
+  edges.push({
+    from: nodeId,
+    to: 'note-content',
+  });
+});
 
-    const container = document.getElementById('graph');
-    const network = new vis.Network(container, graphData, options);
-    network.on('click', event => {
-      if (event.nodes.length > 0) {
-        const clickedNode = nodes.find(node => node.id === event.nodes[0]);
-        if (clickedNode) {
-          fetch(clickedNode.id)
-            .then(response => response.text())
-            .then(markdownText => renderMarkdown(markdownText))
-            .catch(error => console.error(error));
-        }
-      }
-    });
-  </script>
-</body>
-</html>
+const graphData = {
+  nodes: nodes,
+  edges: edges,
+};
+
+const options = {
+  nodes: {
+    shape: 'box',
+    size: 16,
+    color: '#FFFFFF',
+    font: {
+      color: '#000000',
+      size: 14,
+    },
+    borderWidth: 2,
+    shapeProperties: {
+      borderRadius: 5,
+    },
+  },
+  edges: {
+    color: {
+      color: '#000000',
+      hover: '#000000',
+      inherit: false,
+    },
+    arrows: {
+      to: {
+        enabled: true,
+        scaleFactor: 0.5,
+      },
+    },
+    smooth: {
+      type: 'continuous',
+    },
+  },
+  layout: {
+    hierarchical: {
+      enabled: true,
+      direction: 'UD',
+      sortMethod: 'directed',
+      levelSeparation: 150,
+      nodeSpacing: 150,
+    },
+  },
+  physics: {
+    enabled: false,
+  },
+};
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, graphData, options);
+network.on('click', event => {
+  if (event.nodes.length > 0) {
+    const clickedNode = nodes.find(node => node.id === event.nodes[0]);
+    if (clickedNode) {
+      fetch(clickedNode.id + '.md')
+        .then(response => response.text())
+        .then(markdownText => renderMarkdown(markdownText))
+        .catch(error => console.error(error));
+    }
+  }
+});
